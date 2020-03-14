@@ -1,0 +1,7 @@
+﻿  Building 'FirstDriver' with toolset 'WindowsKernelModeDriver10.0' and the 'Universal' target platform.
+  Stamping x64\Release\FirstDriver.inf
+  Stamping [Version] section with DriverVer=02/15/2020,18.31.2.672
+  main.c
+e:\driver\firstdriver\firstdriver\main.c(3): error C2220: 警告被视为错误 - 没有生成“object”文件
+e:\driver\firstdriver\firstdriver\main.c(3): warning C4100: “driver”: 未引用的形参
+e:\driver\firstdriver\firstdriver\main.c(7): warning C4100: “reg_path”: 未引用的形参

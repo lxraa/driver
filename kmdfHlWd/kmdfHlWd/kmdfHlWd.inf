@@ -1,0 +1,86 @@
+;
+; kmdfHlWd.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Sample ; TODO: edit Class
+ClassGuid={78A1C341-4539-11d3-B88D-00C04FAD5171} ; TODO: edit ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=kmdfHlWd.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+
+[DestinationDirs]
+DefaultDestDir = 12
+kmdfHlWd_Device_CoInstaller_CopyFiles = 11
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=SampleClassReg
+
+[SampleClassReg]
+HKR,,,0,%ClassName%
+HKR,,Icon,,-5
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+kmdfHlWd.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%kmdfHlWd.DeviceDesc%=kmdfHlWd_Device, Root\kmdfHlWd ; TODO: edit hw-id
+
+[kmdfHlWd_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+kmdfHlWd.sys
+
+;-------------- Service installation
+[kmdfHlWd_Device.NT.Services]
+AddService = kmdfHlWd,%SPSVCINST_ASSOCSERVICE%, kmdfHlWd_Service_Inst
+
+; -------------- kmdfHlWd driver install sections
+[kmdfHlWd_Service_Inst]
+DisplayName    = %kmdfHlWd.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\kmdfHlWd.sys
+
+;
+;--- kmdfHlWd_Device Coinstaller installation ------
+;
+
+[kmdfHlWd_Device.NT.CoInstallers]
+AddReg=kmdfHlWd_Device_CoInstaller_AddReg
+CopyFiles=kmdfHlWd_Device_CoInstaller_CopyFiles
+
+[kmdfHlWd_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[kmdfHlWd_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[kmdfHlWd_Device.NT.Wdf]
+KmdfService =  kmdfHlWd, kmdfHlWd_wdfsect
+[kmdfHlWd_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+ClassName="Samples" ; TODO: edit ClassName
+DiskName = "kmdfHlWd Installation Disk"
+kmdfHlWd.DeviceDesc = "kmdfHlWd Device"
+kmdfHlWd.SVCDESC = "kmdfHlWd Service"
